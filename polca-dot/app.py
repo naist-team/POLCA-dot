@@ -44,7 +44,8 @@ def routing(env):
 
 def app(env, start_response):
     status, headers, body_raw = routing(env)
-    body = [bytes(line, encoding='utf-8') for line in body_raw.splitlines()]
+    strdata = json.dumps(body_raw)
+    body = [bytes(line, encoding='utf-8') for line in strdata.splitlines()]
     start_response(status, headers)
     return body
 
@@ -52,6 +53,7 @@ def app(env, start_response):
 def main(argv):
     httpd = make_server('localhost', 3000, app)
     print ("Serving on port 3000...")
+    init.init_setup()
     httpd.serve_forever()
     return 0
 

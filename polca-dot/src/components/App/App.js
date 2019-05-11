@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 // import './App.css';
 import Message from '../Message/Message.js'
 import ChatBox from '../Message/ChatBox.js'
-
-// const messagesRef = firebaseDb.ref('messages')
+import { sendMessage, get_message } from '../../actions/common.js';
 
 class App extends Component {
   constructor(props) {
@@ -11,64 +10,53 @@ class App extends Component {
     this.onTextChange = this.onTextChange.bind(this)
     this.onButtonClick = this.onButtonClick.bind(this)
     this.state = {
-      text : "",
+      text: "",
       user_name: "",
       profile_image: "",
-      messages : []
+      messages: []
     }
   }
 
 
-onTextChange(e) {
-  if(e.target.name === 'user_name') {
-    this.setState({
-      "user_name": e.target.value,
-    });
-  } else if (e.target.name === 'profile_image') {
-    this.setState({
-      "profile_image": e.target.value,
-    });
-  } else if (e.target.name === 'text') {
-    this.setState({
-      "text": e.target.value,
-    });
+  onTextChange(e) {
+    if (e.target.name === 'user_name') {
+      this.setState({
+        "user_name": e.target.value,
+      });
+    } else if (e.target.name === 'profile_image') {
+      this.setState({
+        "profile_image": e.target.value,
+      });
+    } else if (e.target.name === 'text') {
+      this.setState({
+        "text": e.target.value,
+      });
+    }
   }
-}
 
 
 
-onButtonClick() {
-  // 簡単なバリデーション
-  if(this.state.user_name === "") {
-    alert('user_name empty')
-    return
-  } else if(this.state.text === "") {
-    alert('text empty')
-    return
+  onButtonClick() {
+    if (this.state.user_name === "") {
+      alert('user_name empty')
+      return
+    } else if (this.state.text === "") {
+      alert('text empty')
+      return
+    }
+
+    let content = {
+      "user_name": this.state.user_name,
+      "profile_image": this.state.profile_image,
+      "text": this.state.text
+    }
+    sendMessage.bind(this)(content);
+
   }
-  // messagesRef.push({
-  //   "user_name" : this.state.user_name,
-  //   "profile_image" : this.state.profile_image,
-  //   "text" : this.state.text,
-  // })
-}
 
-componentWillMount() {
-  // messagesRef.on('child_added', (snapshot) => {
-  //   const m = snapshot.val()
-  //   let msgs = this.state.messages
-
-  //   msgs.push({
-  //     'text' : m.text,
-  //     'user_name' : m.user_name,
-  //     'profile_image' : m.profile_image,
-  //   })
-
-  //   this.setState({
-  //     messages : msgs
-  //   });
-  // })
-}
+  componentDidMount() {
+    get_message.bind(this)
+  }
 
   render() {
     return (
